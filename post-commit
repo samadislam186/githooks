@@ -1,0 +1,19 @@
+touch /root/commit.temp.log
+chmod 755 /root/commit.temp.log
+touch /root/process.temp
+chmod 755 /root/process.temp
+
+echo "===========================================================================================" >> /root/gitfile.log
+
+git log --oneline >> /root/commit.temp.log
+
+grep -vf /root/commit.log /root/commit.temp.log >> /root/process.temp
+
+cat /root/process.temp | awk '{print $1}' | xargs git show --stat >> /root/gitfile.log
+
+DATE_OF_FILE=$(date | awk '{print $4"_"$3"_"$2"_"$6}')
+
+mv /root/commit.log /root/commit.log_$DATE_OF_FILE
+mv /root/commit.temp.log /root/commit.log
+
+/usr/bin/rm /root/process.temp
